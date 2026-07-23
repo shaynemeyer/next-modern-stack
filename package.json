@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "dev:web": "bun --filter web dev",
+    "dev:api": "bun --filter api start:dev",
     "lint": "biome check .",
     "lint:fix": "biome check --unsafe --fix .",
     "format": "biome format --write ."
