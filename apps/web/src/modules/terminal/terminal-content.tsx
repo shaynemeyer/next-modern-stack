@@ -1,4 +1,9 @@
 export function TerminalContent() {
+  const _a = 32;
+  const array = ["split", "the text", "into words"];
+  // array.flatMap((sentence) => sentence.split(" "));
+  array.flatMap((sentence) => sentence.split(" "));
+
   return (
     <div className="flex justify-center flex-col w-full h-full">
       <div className="bg-gray-900 text-green-500 font-mono p-4 rounded w-full">
