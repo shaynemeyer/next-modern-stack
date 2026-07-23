@@ -1,5 +1,5 @@
-import Image from "next/image";
-import { PageWrapper } from "./modules/shared/PageWrapper";
+// import Image from "next/image";
+import { PageWrapper } from './modules/shared/PageWrapper';
 
 export default function Home() {
   return (
