@@ -6,7 +6,9 @@
       "!!.vscode",
       "!!**/.next",
       "!!**/node_modules",
-      "!!**/apps/web/public"
+      "!!**/apps/web/public",
+      "!!**/apps/api/dist",
+      "!!**/test"
     ]
   },
   "linter": {
@@ -14,6 +16,9 @@
     "rules": {
       "suspicious": {
         "noConsole": "warn"
+      },
+      "style": {
+        "useImportType": "off"
       }
     }
   },
