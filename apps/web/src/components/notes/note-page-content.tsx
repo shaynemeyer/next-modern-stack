@@ -1,8 +1,14 @@
-export function NotePageContent() {
+import { Note } from "@/generated/api";
+
+type Props = {
+  note: Note;
+};
+
+export function NotePageContent({ note }: Props) {
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">Note Page</h1>
-      <p>This is the content of the note page.</p>
+      <h1 className="text-2xl font-bold">{note.id}</h1>
+      <p>{note.text}</p>
     </div>
   );
 }
