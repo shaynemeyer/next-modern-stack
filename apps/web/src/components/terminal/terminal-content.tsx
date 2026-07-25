@@ -27,14 +27,18 @@ function buildColumns(folders: Folder[], path: number[]): Folder[][] {
 }
 
 function getSelectedNotes(folders: Folder[], path: number[]): Note[] {
-  if (path.length === 0) return [];
+  let current = folders;
+  let selected: Folder | undefined;
 
-  const lastId = path[path.length - 1];
-  const selectedFolder = folders.find((folder) => folder.id === lastId);
+  for (const id of path) {
+    selected = current.find((folder) => folder.id === id);
 
-  if (!selectedFolder) return [];
+    if (!selected) return [];
 
-  return selectedFolder.notes || [];
+    current = selected.children || [];
+  }
+
+  return selected?.notes || [];
 }
 
 function parsePath(path: string): number[] {
@@ -96,7 +100,7 @@ export function TerminalContent({ folders }: Props) {
 
                 return (
                   <Link
-                    href={`/terminal/notes/${note.id}`}
+                    href={`/notes/${note.id}`}
                     key={note.id}
                     className="mb-1 cursor-pointer hover:bg-gray-700 rounded"
                   >
