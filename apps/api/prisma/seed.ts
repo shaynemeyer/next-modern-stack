@@ -45,13 +45,10 @@ async function main() {
       { text: "Grocery list: milk, eggs, bread", folderId: personal.id },
     ],
   });
-
-  console.log("Seed data created successfully");
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
+  .catch((_e) => {
     process.exit(1);
   })
   .finally(async () => {
