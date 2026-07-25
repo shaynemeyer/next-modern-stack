@@ -1,10 +1,15 @@
-import { PageWrapper } from "@/modules/shared/page-wrapper";
-import { TerminalContent } from "@/modules/terminal/terminal-content";
+import { PageWrapper } from "@/components/shared/page-wrapper";
+import { TerminalContent } from "@/components/terminal/terminal-content";
+import { type Folder, getFolders } from "@/generated/api";
 
 export default async function TerminalPage() {
-  const folders = await fetch("http://localhost:3001/folders").then((res) =>
-    res.json(),
-  );
+  let folders: Folder[] = [];
+
+  try {
+    const response = await getFolders();
+    folders = response.data;
+  } catch (_error) {}
+
   return (
     <PageWrapper>
       <TerminalContent folders={folders} />

@@ -1,5 +1,6 @@
 {
   "tasks": {
+    "generate": {},
     "dev": {
       "persistent": true
     },

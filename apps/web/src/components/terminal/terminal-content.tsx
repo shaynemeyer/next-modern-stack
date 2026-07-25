@@ -1,8 +1,7 @@
+import { Folder } from "@/generated/api";
+
 type Props = {
-  folders: {
-    id: number;
-    name: string;
-  }[];
+  folders: Folder[];
 };
 
 export function TerminalContent({ folders }: Props) {
