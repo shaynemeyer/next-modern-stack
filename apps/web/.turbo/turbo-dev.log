@@ -2,6 +2,8 @@
 [1m[38;2;173;127;168m▲ Next.js 16.2.11[39m[22m (Turbopack)
 - Local:         http://localhost:3000
 - Network:       http://192.168.50.156:3000
-[32m[1m✓[22m[39m Ready in 250ms
+[32m[1m✓[22m[39m Ready in 269ms
 
+ GET / [32m200[39m in 260ms[2m (next.js: 122ms, application-code: 138ms)[22m
+ GET /terminal [32m200[39m in 274ms[2m (next.js: 236ms, application-code: 38ms)[22m
 [?25h
