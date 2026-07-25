@@ -25,6 +25,9 @@
       },
       "style": {
         "useImportType": "off"
+      },
+      "correctness": {
+        "noUnusedVariables": "off"
       }
     }
   },
