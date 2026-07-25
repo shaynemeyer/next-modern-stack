@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useQueryState } from "nuqs";
 import { Folder } from "@/generated/api";
 import { TerminalFolder } from "./terminal-folder";
 
@@ -9,7 +9,9 @@ type Props = {
 };
 
 export function TerminalContent({ folders }: Props) {
-  const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
+  const [selectedFolderId, setSelectedFolderId] = useQueryState("folder", {
+    defaultValue: "",
+  });
 
   return (
     <div className="flex justify-center flex-col w-full h-full">
@@ -20,10 +22,10 @@ export function TerminalContent({ folders }: Props) {
             <div className="flex flex-col items-start">
               {folders.map((folder) => (
                 <TerminalFolder
-                  onClick={() => setSelectedFolder(folder)}
+                  onClick={() => setSelectedFolderId(folder.id.toString())}
                   key={folder.id}
                   folder={folder}
-                  isSelected={selectedFolder?.id === folder.id}
+                  isSelected={selectedFolderId === folder.id.toString()}
                 />
               ))}
             </div>
