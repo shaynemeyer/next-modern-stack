@@ -9,6 +9,10 @@ export class NotesService {
     return this.prisma.note.findUnique({ where: { id } });
   }
 
+  create(folderId: number) {
+    return this.prisma.note.create({ data: { text: "", folderId } });
+  }
+
   update(id: number, text: string) {
     return this.prisma.note.update({ where: { id }, data: { text } });
   }

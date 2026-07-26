@@ -1,11 +1,22 @@
-import { Body, Controller, Get, Param, Patch } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post } from "@nestjs/common";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { NoteDto, UpdateNoteDto } from "./note.dto";
+import { CreateNoteDto, NoteDto, UpdateNoteDto } from "./note.dto";
 import { NotesService } from "./notes.service";
 
 @Controller("notes")
 export class NotesController {
   constructor(private readonly notesService: NotesService) {}
+
+  @Post()
+  @ApiOperation({ summary: "Create a new note", operationId: "createNote" })
+  @ApiResponse({
+    status: 201,
+    description: "The note has been successfully created.",
+    type: NoteDto,
+  })
+  create(@Body() createNoteDto: CreateNoteDto) {
+    return this.notesService.create(createNoteDto.folderId);
+  }
 
   @Get(":id")
   @ApiOperation({ summary: "Get a note by ID", operationId: "getNoteById" })

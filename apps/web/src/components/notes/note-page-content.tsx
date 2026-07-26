@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { Note, updateNote } from "@/generated/api";
 
@@ -21,6 +22,7 @@ export function NotePageContent({ note }: Props) {
 
   const saveNote = () => {
     updateNote(String(note.id), { text: textRef.current });
+    toast.success(`note-${note.id}.txt saved`);
   };
 
   useEffect(() => {

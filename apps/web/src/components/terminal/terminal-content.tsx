@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useQueryState } from "nuqs";
-import { Folder, Note } from "@/generated/api";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import { createNote, Folder, Note, updateNote } from "@/generated/api";
 import { TerminalFolder } from "./terminal-folder";
 
 type Props = {
@@ -45,13 +47,47 @@ function parsePath(path: string): number[] {
   return path.split(",").map(Number).filter(Boolean);
 }
 
-export function TerminalContent({ folders }: Props) {
+function addNoteToFolders(
+  folders: Folder[],
+  path: number[],
+  note: Note,
+): Folder[] {
+  const [id, ...rest] = path;
+
+  if (id === undefined) return folders;
+
+  return folders.map((folder) => {
+    if (folder.id !== id) return folder;
+
+    if (rest.length === 0) {
+      return { ...folder, notes: [...folder.notes, note] };
+    }
+
+    return {
+      ...folder,
+      children: addNoteToFolders(folder.children, rest, note),
+    };
+  });
+}
+
+export function TerminalContent({ folders: initialFolders }: Props) {
+  const [folders, setFolders] = useState(initialFolders);
+  const [isAddingNote, setIsAddingNote] = useState(false);
+  const [newNoteText, setNewNoteText] = useState("");
+  const newNoteInputRef = useRef<HTMLInputElement>(null);
+  const isSubmittingNoteRef = useRef(false);
   const [folderPath, setFolderPath] = useQueryState("folder", {
     defaultValue: "",
   });
 
-  const columns = buildColumns(folders, parsePath(folderPath));
-  const notes = getSelectedNotes(folders, parsePath(folderPath));
+  useEffect(() => {
+    if (isAddingNote) newNoteInputRef.current?.focus();
+  }, [isAddingNote]);
+
+  const path = parsePath(folderPath);
+  const columns = buildColumns(folders, path);
+  const notes = getSelectedNotes(folders, path);
+  const currentFolderId = path[path.length - 1];
 
   const handleSelectedFolder = (folderId: number, colIndex: number) => {
     const currPath = parsePath(folderPath);
@@ -65,6 +101,35 @@ export function TerminalContent({ folders }: Props) {
 
     const newPath = [...currPath.slice(0, colIndex), folderId];
     setFolderPath(newPath.join(","));
+  };
+
+  const handleConfirmNewNote = async () => {
+    if (currentFolderId === undefined || isSubmittingNoteRef.current) return;
+    isSubmittingNoteRef.current = true;
+
+    const text = newNoteText;
+    const { data: note } = await createNote({ folderId: currentFolderId });
+    if (text) {
+      await updateNote(String(note.id), { text });
+      note.text = text;
+    }
+
+    setFolders((prev) => addNoteToFolders(prev, path, note));
+    setIsAddingNote(false);
+    setNewNoteText("");
+    isSubmittingNoteRef.current = false;
+    toast.success(`note-${note.id}.txt created`);
+  };
+
+  const handleNewNoteKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleConfirmNewNote();
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      setIsAddingNote(false);
+      setNewNoteText("");
+    }
   };
 
   return (
@@ -88,7 +153,7 @@ export function TerminalContent({ folders }: Props) {
               </div>
             </div>
           ))}
-          {notes.length > 0 && (
+          {currentFolderId !== undefined && (
             <div>
               <div className="border-b mb-2">Notes:</div>
               {notes.map((note) => {
@@ -108,6 +173,31 @@ export function TerminalContent({ folders }: Props) {
                   </Link>
                 );
               })}
+              <div className="mt-3">
+                {isAddingNote ? (
+                  <div className="flex items-center">
+                    <span className="mr-1">&gt;</span>
+                    <input
+                      ref={newNoteInputRef}
+                      type="text"
+                      value={newNoteText}
+                      onChange={(e) => setNewNoteText(e.target.value)}
+                      onKeyDown={handleNewNoteKeyDown}
+                      onBlur={handleConfirmNewNote}
+                      placeholder="note text..."
+                      className="bg-transparent border-none outline-none font-mono text-green-500 placeholder:text-green-800 flex-1"
+                    />
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIsAddingNote(true)}
+                    className="cursor-pointer hover:bg-gray-700 rounded block text-left"
+                  >
+                    [+] New note
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </div>
