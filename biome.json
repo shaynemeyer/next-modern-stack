@@ -15,7 +15,8 @@
       "!**/apps/api/dist",
       "!**/test",
       "!**/generated",
-      "!**/.agents"
+      "!**/.agents",
+      "!**/.claude"
     ]
   },
   "linter": {
