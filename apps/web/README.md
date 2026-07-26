@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# web
 
-## Getting Started
+The frontend for next-modern-stack: a [Next.js 16](https://nextjs.org) app (App Router) for managing notes and folders, backed by the [`api`](../api) NestJS service.
 
-First, run the development server:
+## Getting started
+
+From the repo root, install dependencies and start Postgres/the API first, then:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun run dev:web
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The dev script waits for the API to be reachable on `localhost:3001` before starting `next dev` (see `scripts/wait-for-api.sh`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Open [http://localhost:3000](http://localhost:3000) to view the app.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts
 
-## Learn More
+```bash
+bun run dev        # wait for API, then start Next.js dev server
+bun run build       # next build
+bun run start        # next start
+bun run generate    # orval: regenerate the typed API client from the NestJS Swagger schema
+```
 
-To learn more about Next.js, take a look at the following resources:
+`generate` requires the API's dev server to be running (it reads `http://localhost:3001/api-docs-json`) and writes the generated client to `src/generated/api.ts`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## App structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `src/app` — routes: `/` (home), `/notes`, `/notes/[id]`, `/terminal`
+- `src/components/notes`, `src/components/terminal`, `src/components/shared` — feature components
+- `src/components/ui` — [shadcn/ui](https://ui.shadcn.com) components (Base UI + Tailwind)
+- `src/generated` — orval-generated API client (do not edit by hand)
+- `src/lib` — shared utilities
+- `src/modules` — feature modules
 
-## Deploy on Vercel
+## Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Next.js 16, React 19
+- Tailwind CSS v4, shadcn/ui, Base UI, lucide-react icons
+- nuqs for URL state, next-themes for theming, sonner for toasts
+- orval for generating a typed client from the API's OpenAPI schema
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notes
+
+This project pins Next.js 16, which has breaking changes vs. earlier versions — see `AGENTS.md` and `node_modules/next/dist/docs/` before assuming APIs from older Next.js docs still apply.
