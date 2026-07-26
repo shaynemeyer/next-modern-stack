@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
-import { Note, updateNote } from "@/generated/api";
+import { Note, useUpdateNote } from "@/generated/api";
 
 type Props = {
   note: Note;
@@ -19,9 +19,10 @@ export function NotePageContent({ note }: Props) {
   const searchParams = useSearchParams();
   const folderPath = searchParams.get("folder");
   const backHref = folderPath ? `/terminal?folder=${folderPath}` : "/terminal";
+  const { mutate: updateNote } = useUpdateNote();
 
   const saveNote = () => {
-    updateNote(String(note.id), { text: textRef.current });
+    updateNote({ id: String(note.id), data: { text: textRef.current } });
     toast.success(`note-${note.id}.txt saved`);
   };
 

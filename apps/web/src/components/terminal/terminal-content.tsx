@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useQueryState } from "nuqs";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { createNote, Folder, Note, updateNote } from "@/generated/api";
+import { Folder, Note, useCreateNote, useUpdateNote } from "@/generated/api";
 import { TerminalFolder } from "./terminal-folder";
 
 type Props = {
@@ -79,6 +79,8 @@ export function TerminalContent({ folders: initialFolders }: Props) {
   const [folderPath, setFolderPath] = useQueryState("folder", {
     defaultValue: "",
   });
+  const { mutateAsync: createNote } = useCreateNote();
+  const { mutateAsync: updateNote } = useUpdateNote();
 
   useEffect(() => {
     if (isAddingNote) newNoteInputRef.current?.focus();
@@ -108,9 +110,11 @@ export function TerminalContent({ folders: initialFolders }: Props) {
     isSubmittingNoteRef.current = true;
 
     const text = newNoteText;
-    const { data: note } = await createNote({ folderId: currentFolderId });
+    const { data: note } = await createNote({
+      data: { folderId: currentFolderId },
+    });
     if (text) {
-      await updateNote(String(note.id), { text });
+      await updateNote({ id: String(note.id), data: { text } });
       note.text = text;
     }
 

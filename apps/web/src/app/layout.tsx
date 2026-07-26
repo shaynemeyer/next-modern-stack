@@ -7,6 +7,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { QueryProvider } from "@/components/providers/query-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
@@ -52,8 +53,10 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col">
-        <NuqsAdapter>{children}</NuqsAdapter>
-        <Toaster />
+        <QueryProvider>
+          <NuqsAdapter>{children}</NuqsAdapter>
+          <Toaster />
+        </QueryProvider>
       </body>
     </html>
   );
