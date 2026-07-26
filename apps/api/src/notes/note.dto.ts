@@ -14,3 +14,9 @@ export class NoteDto {
   @ApiProperty({ description: "The date and time when the note was created" })
   createdAt: Date;
 }
+
+@ApiSchema({ name: "UpdateNote" })
+export class UpdateNoteDto {
+  @ApiProperty({ description: "The text content of the note" })
+  text: string;
+}

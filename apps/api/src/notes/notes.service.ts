@@ -8,4 +8,8 @@ export class NotesService {
   findOne(id: number) {
     return this.prisma.note.findUnique({ where: { id } });
   }
+
+  update(id: number, text: string) {
+    return this.prisma.note.update({ where: { id }, data: { text } });
+  }
 }

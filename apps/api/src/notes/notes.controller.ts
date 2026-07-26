@@ -1,6 +1,6 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch } from "@nestjs/common";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { NoteDto } from "./note.dto";
+import { NoteDto, UpdateNoteDto } from "./note.dto";
 import { NotesService } from "./notes.service";
 
 @Controller("notes")
@@ -16,5 +16,16 @@ export class NotesController {
   })
   findOne(@Param("id") id: string) {
     return this.notesService.findOne(+id);
+  }
+
+  @Patch(":id")
+  @ApiOperation({ summary: "Update a note by ID", operationId: "updateNote" })
+  @ApiResponse({
+    status: 200,
+    description: "The note has been successfully updated.",
+    type: NoteDto,
+  })
+  update(@Param("id") id: string, @Body() updateNoteDto: UpdateNoteDto) {
+    return this.notesService.update(+id, updateNoteDto.text);
   }
 }

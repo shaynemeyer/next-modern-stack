@@ -100,7 +100,7 @@ export function TerminalContent({ folders }: Props) {
 
                 return (
                   <Link
-                    href={`/notes/${note.id}`}
+                    href={`/notes/${note.id}${folderPath ? `?folder=${folderPath}` : ""}`}
                     key={note.id}
                     className="mb-1 cursor-pointer hover:bg-gray-700 rounded block"
                   >
